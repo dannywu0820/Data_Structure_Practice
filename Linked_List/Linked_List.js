@@ -136,10 +136,12 @@ Linked_List.prototype.toString = function(){
 			var current = this.head;
 
 			while(current.next != null){
-				str = str + current.value + "->";
+				//str = str + current.value + "->";
+				str = str + "{" +current.value.key + "," + current.value.value + "}" + "->";
 				current = current.next;
 			}
-			str = str + current.value;
+			//str = str + current.value;
+			str = str + "{" +current.value.key + "," + current.value.value + "}";
 		}
 
 		return str;
