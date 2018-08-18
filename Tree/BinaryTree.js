@@ -92,6 +92,47 @@ const BinaryTree = function(Node){
 		}
 	}
 
+	/********************************************
+	*in-order reversed traversal using loop instead of recursion
+	*findRightMostNode: find the right most node of a binary tree
+	*findInOrderPredecessor: find the predecessor node in the order of in-order traversal
+	*inOrderReverseByLoop: loop version of in-order reversed traversal
+	********************************************/
+
+	function findRightMostNode(current_node){
+		while(current_node.right_child != null){
+			current_node = current_node.right_child;
+		}
+
+		return current_node;
+	}
+
+	function findInOrderPredecessor(current_node){
+		let has_left_subtree = (current_node.left_child != null);
+		if(has_left_subtree){
+			return findRightMostNode(current_node.left_child);
+		}
+
+		//traverse to an ancestor that current is its right child
+		let current = current_node;
+		let ancestor = current_node.parent;
+		while((ancestor != null) && (ancestor.left_child == current)){
+			current = ancestor;
+			ancestor = ancestor.parent;
+		}
+
+		return ancestor;
+	}
+
+	function inOrderReverseByLoop(current_node){
+		let current = findRightMostNode(current_node);
+
+		while(current != null){
+			console.log(current.getData());
+			current = findInOrderPredecessor(current);
+		}
+	}
+
 	return {
 		getRoot: function(){
 			return getRoot();
@@ -115,6 +156,10 @@ const BinaryTree = function(Node){
 		inOrderTraverseByLoop: function(current_node){
 			console.log("In-Order Traversal Loop Version");
 			inOrderTraverseByLoop(current_node);
+		},
+		inOrderReverseByLoop: function(current_node){
+			console.log("In-Order Reversed Traversal Loop Version");
+			inOrderReverseByLoop(current_node);
 		}
 	}
 }

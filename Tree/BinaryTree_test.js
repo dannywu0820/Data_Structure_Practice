@@ -62,6 +62,7 @@ function traversalTest(){
 	myBinaryTree.postOrderTraverse(myBinaryTree.getRoot());
 	myBinaryTree.levelOrderTraverse(myBinaryTree.getRoot());
 	myBinaryTree.inOrderTraverseByLoop(myBinaryTree.getRoot());
+	myBinaryTree.inOrderReverseByLoop(myBinaryTree.getRoot());
 }
 
 function main(){
