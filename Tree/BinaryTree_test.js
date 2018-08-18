@@ -29,11 +29,39 @@ function traversalTest(){
 	nodes["E"].right_child = nodes["H"];
 	nodes["F"].right_child = nodes["I"];
 
+	nodes["B"].parent = nodes["A"];
+	nodes["C"].parent = nodes["A"];
+	nodes["D"].parent = nodes["B"];
+	nodes["E"].parent = nodes["B"];
+	nodes["F"].parent = nodes["C"];
+	nodes["G"].parent = nodes["E"];
+	nodes["H"].parent = nodes["E"];
+	nodes["I"].parent = nodes["F"];
+
+	/*nodes["A"].left_child = nodes["B"];
+	nodes["B"].left_child = nodes["C"];
+	nodes["C"].left_child = nodes["D"];
+	nodes["D"].left_child = nodes["E"];
+	nodes["E"].left_child = nodes["F"];
+	nodes["F"].left_child = nodes["G"];
+	nodes["G"].left_child = nodes["H"];
+	nodes["H"].left_child = nodes["I"];
+
+	nodes["B"].parent = nodes["A"];
+	nodes["C"].parent = nodes["B"];
+	nodes["D"].parent = nodes["C"];
+	nodes["E"].parent = nodes["D"];
+	nodes["F"].parent = nodes["E"];
+	nodes["G"].parent = nodes["F"];
+	nodes["H"].parent = nodes["G"];
+	nodes["I"].parent = nodes["H"];*/
+
 	let myBinaryTree = TreeClass(nodes["A"]);
 	myBinaryTree.preOrderTraverse(myBinaryTree.getRoot());
 	myBinaryTree.inOrderTraverse(myBinaryTree.getRoot());
 	myBinaryTree.postOrderTraverse(myBinaryTree.getRoot());
 	myBinaryTree.levelOrderTraverse(myBinaryTree.getRoot());
+	myBinaryTree.inOrderTraverseByLoop(myBinaryTree.getRoot());
 }
 
 function main(){

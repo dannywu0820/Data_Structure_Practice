@@ -49,6 +49,49 @@ const BinaryTree = function(Node){
 		}
 	}
 
+	/********************************************
+	*in-order traversal using loop instead of recursion
+	*findLeftMostNode: find the left most node of a binary tree
+	*findInOrderSuccessor: find the successor node in the order of in-order traversal
+	*inOrderTraverseByLoop: loop version of in-order traversal
+	********************************************/
+
+	function findLeftMostNode(current_node){
+		while(current_node.left_child != null){
+			current_node = current_node.left_child;
+		}
+
+		return current_node;
+	}
+
+	function findInOrderSuccessor(current_node){
+		let has_right_subtree = (current_node.right_child != null);
+		if(has_right_subtree){
+			return findLeftMostNode(current_node.right_child);
+		}
+
+		//traverse to an ancestor that current is its left child
+		let current = current_node;
+		let ancestor = current_node.parent;
+		while((ancestor != null) && (ancestor.right_child == current)){
+			current = ancestor;
+			ancestor = ancestor.parent;
+		}
+
+		return ancestor;
+	}
+
+	function inOrderTraverseByLoop(current_node){
+		let order = 0;
+		let current = findLeftMostNode(current_node);
+
+		while(current != null){
+			order++;
+			console.log(order + ". " + current.getData());
+			current = findInOrderSuccessor(current);
+		}
+	}
+
 	return {
 		getRoot: function(){
 			return getRoot();
@@ -68,6 +111,10 @@ const BinaryTree = function(Node){
 		levelOrderTraverse: function(current_node){
 			console.log("Level-Order Traversal");
 			levelOrderTraverse(current_node);
+		},
+		inOrderTraverseByLoop: function(current_node){
+			console.log("In-Order Traversal Loop Version");
+			inOrderTraverseByLoop(current_node);
 		}
 	}
 }
