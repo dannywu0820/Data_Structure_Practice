@@ -142,7 +142,6 @@ const BinaryTree = function(Node){
 	}
 
 	function constructByLevelOrder(str_to_construct_tree){
-		console.log("Construct Tree By Level-Order");
 		char_data = str_to_construct_tree.split(" ");
 
 		root = TreeNode(char_data[0]);
@@ -203,6 +202,7 @@ const BinaryTree = function(Node){
 			inOrderReverseByLoop(current_node);
 		},
 		constructByLevelOrder: function(str_to_construct_tree){
+			console.log("Construct Tree By Level-Order");
 			constructByLevelOrder(str_to_construct_tree);
 		}
 	}
