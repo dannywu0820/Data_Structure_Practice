@@ -101,9 +101,19 @@ function traversalVer2Test(){
 	myBinaryTree.inOrderReverseByLoop(myBinaryTree.getRoot());
 }
 
+function constructByLevelOrderTest(){
+	let str_to_construct_tree = "A B C D E F x x x G H x I";
+	let myBinaryTree = TreeClass(null);
+	myBinaryTree.constructByLevelOrder(str_to_construct_tree);
+	myBinaryTree.levelOrderTraverse(myBinaryTree.getRoot());
+	myBinaryTree.inOrderTraverse(myBinaryTree.getRoot());
+	myBinaryTree.inOrderTraverseByLoop(myBinaryTree.getRoot());
+}
+
 function main(){
 	//traversalTest();
 	traversalVer2Test();
+	constructByLevelOrderTest();
 }
 
 main();

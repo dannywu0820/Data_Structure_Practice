@@ -141,6 +141,39 @@ const BinaryTree = function(Node){
 		}
 	}
 
+	function constructByLevelOrder(str_to_construct_tree){
+		console.log("Construct Tree By Level-Order");
+		char_data = str_to_construct_tree.split(" ");
+
+		root = TreeNode(char_data[0]);
+		let current = root;
+		let i = 1;
+		let queue = [];
+		while(i < char_data.length){
+			if((char_data[i].charCodeAt(0) >= 65) && (char_data[i].charCodeAt(0) <= 90)){
+				console.log(char_data[i]);
+				let new_node = TreeNode(char_data[i]);
+				current.setChild("L", new_node);
+				new_node.setParent(current);
+				queue.push(new_node);
+			}
+			i++;
+
+			if(i >= char_data.length) break;
+
+			if((char_data[i].charCodeAt(0) >= 65) && (char_data[i].charCodeAt(0) <= 90)){
+				console.log(char_data[i]);
+				let new_node = TreeNode(char_data[i]);
+				current.setChild("R", new_node);
+				new_node.setParent(current);
+				queue.push(new_node);
+			}
+			i++
+
+			current = queue.shift();
+		}
+	}
+
 	return {
 		getRoot: function(){
 			return getRoot();
@@ -168,6 +201,9 @@ const BinaryTree = function(Node){
 		inOrderReverseByLoop: function(current_node){
 			console.log("In-Order Reversed Traversal Loop Version");
 			inOrderReverseByLoop(current_node);
+		},
+		constructByLevelOrder: function(str_to_construct_tree){
+			constructByLevelOrder(str_to_construct_tree);
 		}
 	}
 }
