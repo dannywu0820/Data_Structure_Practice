@@ -110,10 +110,22 @@ function constructByLevelOrderTest(){
 	myBinaryTree.inOrderTraverseByLoop(myBinaryTree.getRoot());
 }
 
+function insertByLevelOrderTest(){
+	let str_to_construct_tree = "A B C D E F x x x G H x I";
+	let myBinaryTree = TreeClass(null);
+	myBinaryTree.constructByLevelOrder(str_to_construct_tree);
+	myBinaryTree.insertByLevelOrder(NodeClass("K"));
+	myBinaryTree.insertByLevelOrder(NodeClass("L"));
+	myBinaryTree.insertByLevelOrder(NodeClass("M"));
+	myBinaryTree.insertByLevelOrder(NodeClass("N"));
+	myBinaryTree.levelOrderTraverse(myBinaryTree.getRoot());
+}
+
 function main(){
 	//traversalTest();
 	traversalVer2Test();
 	constructByLevelOrderTest();
+	insertByLevelOrderTest();
 }
 
 main();

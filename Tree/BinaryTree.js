@@ -173,6 +173,37 @@ const BinaryTree = function(Node){
 		}
 	}
 
+	function insertByLevelOrder(node){
+		if(root == null){
+			root = node;
+			return;
+		}
+
+		let current = root;
+		let queue = [];
+		while(current){
+			if(current.getChild("L") == null){
+				current.setChild("L", node);
+				node.setParent(current);
+				break;
+			}
+			else{
+				queue.push(current.getChild("L"));
+			}
+
+			if(current.getChild("R") == null){
+				current.setChild("R", node);
+				node.setParent(current);
+				break;
+			}
+			else{
+				queue.push(current.getChild("R"));
+			}
+
+			current = queue.shift();
+		}
+	}
+
 	return {
 		getRoot: function(){
 			return getRoot();
@@ -204,6 +235,10 @@ const BinaryTree = function(Node){
 		constructByLevelOrder: function(str_to_construct_tree){
 			console.log("Construct Tree By Level-Order");
 			constructByLevelOrder(str_to_construct_tree);
+		},
+		insertByLevelOrder: function(node){
+			console.log("Insert Node By Level-Order");
+			insertByLevelOrder(node);
 		}
 	}
 }
