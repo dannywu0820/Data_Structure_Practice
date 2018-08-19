@@ -9,23 +9,29 @@ const BinaryTree = function(Node){
 	function preOrderTraverse(current_node){
 		if(current_node){
 			console.log(current_node.getData());
-			preOrderTraverse(current_node.left_child);
-			preOrderTraverse(current_node.right_child);
+			preOrderTraverse(current_node.getChild("L"));
+			//preOrderTraverse(current_node.left_child);
+			preOrderTraverse(current_node.getChild("R"));
+			//preOrderTraverse(current_node.right_child);
 		}
 	}
 
 	function inOrderTraverse(current_node){
 		if(current_node){
-			inOrderTraverse(current_node.left_child);
+			inOrderTraverse(current_node.getChild("L"));
+			//inOrderTraverse(current_node.left_child);
 			console.log(current_node.getData());
-			inOrderTraverse(current_node.right_child);
+			inOrderTraverse(current_node.getChild("R"));
+			//inOrderTraverse(current_node.right_child);
 		}
 	}
 
 	function postOrderTraverse(current_node){
 		if(current_node){
-			postOrderTraverse(current_node.left_child);
-			postOrderTraverse(current_node.right_child);
+			postOrderTraverse(current_node.getChild("L"));
+			//postOrderTraverse(current_node.left_child);
+			postOrderTraverse(current_node.getChild("R"));
+			//postOrderTraverse(current_node.right_child);
 			console.log(current_node.getData());
 		}
 	}
@@ -40,11 +46,13 @@ const BinaryTree = function(Node){
 			index++;
 			console.log(index + ". " + first_node_in_queue.getData());
 
-			if(first_node_in_queue.left_child){
-				queue.push(first_node_in_queue.left_child);
+			let left_child = first_node_in_queue.getChild("L");
+			if(left_child){
+				queue.push(left_child);
 			}
-			if(first_node_in_queue.right_child){
-				queue.push(first_node_in_queue.right_child);
+			let right_child = first_node_in_queue.getChild("R");
+			if(right_child){
+				queue.push(right_child);
 			}
 		}
 	}
@@ -57,25 +65,25 @@ const BinaryTree = function(Node){
 	********************************************/
 
 	function findLeftMostNode(current_node){
-		while(current_node.left_child != null){
-			current_node = current_node.left_child;
+		while(current_node.getChild("L") != null){
+			current_node = current_node.getChild("L");
 		}
 
 		return current_node;
 	}
 
 	function findInOrderSuccessor(current_node){
-		let has_right_subtree = (current_node.right_child != null);
+		let has_right_subtree = (current_node.getChild("R") != null);
 		if(has_right_subtree){
-			return findLeftMostNode(current_node.right_child);
+			return findLeftMostNode(current_node.getChild("R"));
 		}
 
 		//traverse to an ancestor that current is its left child
 		let current = current_node;
-		let ancestor = current_node.parent;
-		while((ancestor != null) && (ancestor.right_child == current)){
+		let ancestor = current_node.getParent();
+		while((ancestor != null) && (ancestor.getChild("R") == current)){
 			current = ancestor;
-			ancestor = ancestor.parent;
+			ancestor = ancestor.getParent();
 		}
 
 		return ancestor;
@@ -100,25 +108,25 @@ const BinaryTree = function(Node){
 	********************************************/
 
 	function findRightMostNode(current_node){
-		while(current_node.right_child != null){
-			current_node = current_node.right_child;
+		while(current_node.getChild("R") != null){
+			current_node = current_node.getChild("R");
 		}
 
 		return current_node;
 	}
 
 	function findInOrderPredecessor(current_node){
-		let has_left_subtree = (current_node.left_child != null);
+		let has_left_subtree = (current_node.getChild("L") != null);
 		if(has_left_subtree){
-			return findRightMostNode(current_node.left_child);
+			return findRightMostNode(current_node.getChild("L"));
 		}
 
 		//traverse to an ancestor that current is its right child
 		let current = current_node;
-		let ancestor = current_node.parent;
-		while((ancestor != null) && (ancestor.left_child == current)){
+		let ancestor = current_node.getParent();
+		while((ancestor != null) && (ancestor.getChild("L") == current)){
 			current = ancestor;
-			ancestor = ancestor.parent;
+			ancestor = ancestor.getParent();
 		}
 
 		return ancestor;

@@ -65,8 +65,45 @@ function traversalTest(){
 	myBinaryTree.inOrderReverseByLoop(myBinaryTree.getRoot());
 }
 
+function traversalVer2Test(){
+	let nodes = {};
+	for(let i = 1; i < 10; i++){
+		let index = String.fromCharCode(64+i);
+		let new_node = NodeClass(index);
+		console.log(new_node.getData());
+		nodes[index] = new_node;
+	}
+
+	nodes["A"].setChild("L", nodes["B"]);
+	nodes["A"].setChild("R", nodes["C"]);
+	nodes["B"].setChild("L", nodes["D"]);
+	nodes["B"].setChild("R", nodes["E"]);
+	nodes["C"].setChild("L", nodes["F"]);
+	nodes["E"].setChild("L", nodes["G"]);
+	nodes["E"].setChild("R", nodes["H"]);
+	nodes["F"].setChild("R", nodes["I"]);
+
+	nodes["B"].setParent(nodes["A"]);
+	nodes["C"].setParent(nodes["A"]);
+	nodes["D"].setParent(nodes["B"]);
+	nodes["E"].setParent(nodes["B"]);
+	nodes["F"].setParent(nodes["C"]);
+	nodes["G"].setParent(nodes["E"]);
+	nodes["H"].setParent(nodes["E"]);
+	nodes["I"].setParent(nodes["F"]);	
+
+	let myBinaryTree = TreeClass(nodes["A"]);
+	myBinaryTree.preOrderTraverse(myBinaryTree.getRoot());
+	myBinaryTree.inOrderTraverse(myBinaryTree.getRoot());
+	myBinaryTree.postOrderTraverse(myBinaryTree.getRoot());
+	myBinaryTree.levelOrderTraverse(myBinaryTree.getRoot());
+	myBinaryTree.inOrderTraverseByLoop(myBinaryTree.getRoot());
+	myBinaryTree.inOrderReverseByLoop(myBinaryTree.getRoot());
+}
+
 function main(){
-	traversalTest();
+	//traversalTest();
+	traversalVer2Test();
 }
 
 main();
