@@ -9,8 +9,16 @@ const TreeNode = function(key, value){
 		return key_int;
 	}
 
+	function setKey(new_key){
+		key_int = new_key;
+	}
+
 	function getValue(){
 		return value_str;
+	}
+
+	function setValue(new_value){
+		value_str = new_value;
 	}
 
 	function getParent(){
@@ -39,12 +47,30 @@ const TreeNode = function(key, value){
 		}
 	}
 
+	function getNumberOfChildren(){
+		if(left_child != null && right_child != null){
+			return 2;
+		}
+		else if(left_child != null || right_child != null){
+			return 1;
+		}
+		else{
+			return 0;	
+		}
+	}
+
 	return {
 		getKey: function(){
 			return getKey();
 		},
+		setKey: function(new_key){
+			setKey(new_key);
+		},
 		getValue: function(){
 			return getValue();
+		},
+		setValue: function(new_value){
+			setValue(new_value);
 		},
 		getParent: function(){
 			return getParent();
@@ -57,6 +83,9 @@ const TreeNode = function(key, value){
 		},
 		setChild: function(left_or_right, node){
 			setChild(left_or_right, node);
+		},
+		getNumberOfChildren: function(){
+			return getNumberOfChildren();
 		}
 	}
 }
@@ -157,16 +186,135 @@ const BinarySearchTree = function(){
 
 		if(current == null){
 			console.log("No Such Key");
-			return null;
 		}
 		else{
 			console.log("Found");
-			return current;
+		}
+		return current;
+	}
+
+	function deleteNodeIntuitive(key){
+		let node_to_delete = searchNode(key);
+		if(node_to_delete == null){
+			console.log("No Such Key To Delete");
+			return;
+		}
+
+		let num_of_children = node_to_delete.getNumberOfChildren();
+		console.log(num_of_children);
+
+		let parent_of_delete = null;
+		switch(num_of_children){
+			case 0:
+				parent_of_delete = node_to_delete.getParent();
+				if(parent_of_delete == null){
+					root = null;
+				}
+				else if(parent_of_delete.getChild("L") == node_to_delete){
+					parent_of_delete.setChild("L", null);
+				}
+				else{
+					parent_of_delete.setChild("R", null);
+				}
+
+				delete node_to_delete;
+				break;
+			case 1:
+				parent_of_delete = node_to_delete.getParent();
+				let child_of_delete = (node_to_delete.getChild("L") != null)?node_to_delete.getChild("L"):node_to_delete.getChild("R");
+				child_of_delete.setParent(parent_of_delete);
+				
+				if(parent_of_delete == null){
+					root = child_of_delete;
+				}
+				else{
+					if(parent_of_delete.getChild("L") == node_to_delete){
+						parent_of_delete.setChild("L", child_of_delete);
+					}
+					else{
+						parent_of_delete.setChild("R", child_of_delete);
+					}
+				}
+
+				delete node_to_delete;
+				break;
+			case 2:
+				let node_to_release_memory = findSuccessor(node_to_delete);
+				let parent_of_release_memory = node_to_release_memory.getParent(); 
+				let child_of_release_memory = node_to_release_memory.getChild("R");
+				
+				if(child_of_release_memory != null){
+					child_of_release_memory.setParent(parent_of_release_memory);
+				}
+
+				if(parent_of_release_memory == null){
+					root = child_of_release_memory;
+				}
+				else{
+					if(parent_of_release_memory.getChild("L") == node_to_release_memory){
+						parent_of_release_memory.setChild("L", child_of_release_memory);
+					}
+					else{
+						parent_of_release_memory.setChild("R", child_of_release_memory);
+					}
+				}
+
+				node_to_delete.setKey(node_to_release_memory.getKey());
+				node_to_delete.setValue(node_to_release_memory.getValue());
+				delete node_to_release_memory;
+				break;
+			default:
+				break;
 		}
 	}
 
-	function deleteNode(){
+	function deleteNode(key){
+		//1.check if the key is in binary search tree
+		let node_to_delete = searchNode(key);
+		if(node_to_delete == null){
+			console.log("No Such Node");
+			return;
+		}
 
+		//2.adjust node_to_release_memory to a node that has at most one child
+		let node_to_release_memory = node_to_delete;
+		if((node_to_delete.getChild("L") != null) && (node_to_delete.getChild("R") != null)){
+			node_to_release_memory = findSuccessor(node_to_delete);
+		}
+
+		//3.determine child_of_release_memory given that it has at most one child
+		let child_of_release_memory = null;
+		if(node_to_release_memory.getChild("L") != null){
+			child_of_release_memory = node_to_release_memory.getChild("L");
+		}
+		else{
+			child_of_release_memory = node_to_release_memory.getChild("R");	
+		}
+
+		//4.set parent of child_of_release_memory to parent of node_to_release_memory
+		let parent_of_release_memory = node_to_release_memory.getParent()
+		if(child_of_release_memory != null){
+			child_of_release_memory.setParent(parent_of_release_memory);
+		}
+
+		//5.set child of parent_of_release_memory to child of node_to_release_memory
+		if(parent_of_release_memory == null){
+			root = child_of_release_memory;
+		}
+		else if((parent_of_release_memory.getChild("L")) == node_to_release_memory){
+			parent_of_release_memory.setChild("L", child_of_release_memory);
+		}
+		else{
+			parent_of_release_memory.setChild("R", child_of_release_memory);
+		}
+
+		//6.
+		if(node_to_release_memory != node_to_delete){
+			node_to_delete.setKey(node_to_release_memory.getKey());
+			node_to_delete.setValue(node_to_release_memory.getValue());
+		}
+
+		delete node_to_release_memory;
 	}
 
 	return {
@@ -184,8 +332,9 @@ const BinarySearchTree = function(){
 		insertNode: function(key, value){
 			insertNode(key, value);
 		},
-		deleteNode: function(){
-
+		deleteNode: function(key){
+			deleteNodeIntuitive(key);
+			//deleteNode(key);
 		}
 	}
 }
