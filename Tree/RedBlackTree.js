@@ -1,18 +1,13 @@
+const RED = 0;
+const BLACK = 1;
+
 const TreeNode = function(key, value){
 	let key_int = key;
 	let value_str = value;
-	let color = null;
+	let color = RED;
 	let parent = null;
 	let left_child = null;
 	let right_child = null;
-
-	function getKey(){
-
-	}
-
-	function setKey(){
-
-	}
 
 	function getKey(){
 		return key_int;
@@ -28,6 +23,14 @@ const TreeNode = function(key, value){
 
 	function setValue(new_value){
 		value_str = new_value
+	}
+
+	function getColor(){
+		return color;
+	}
+
+	function setColor(new_color){
+		color = new_color;
 	}
 
 	function getParent(){
@@ -69,6 +72,12 @@ const TreeNode = function(key, value){
 		setValue: function(new_value){
 			setValue(new_value);
 		},
+		getColor: function(){
+			return getColor();
+		},
+		setColor: function(new_color){
+			setColor(new_color);
+		},
 		getParent: function(){
 			return getParent();
 		},
@@ -85,8 +94,61 @@ const TreeNode = function(key, value){
 }
 
 const RedBlackTree = function(){
-	let root = null;
-	let neel = null;
+	let neel = TreeNode(null, null);
+	neel.setColor(BLACK);
+	let root = neel;
+
+	function levelOrderTraverse(){
+		let queue = [];
+		let index = 0;
+		queue.push(root);
+		while((queue) && (queue.length > 0)){
+			let first_node_in_queue = queue.shift();
+			index++;
+			console.log(index + ". Key: " + first_node_in_queue.getKey() + " Color: " + (first_node_in_queue.getColor()?"Black":"Red"));
+
+			if(first_node_in_queue.getChild("L") != neel){
+				queue.push(first_node_in_queue.getChild("L"));
+			}
+			if(first_node_in_queue.getChild("R") != neel){
+				queue.push(first_node_in_queue.getChild("R"));
+			}
+		}
+	}
+
+	function findLeftMostNode(current_node){
+		while(current_node.getChild("L") != neel){
+			current_node = current_node.getChild("L");
+		}
+
+		return current_node;
+	}
+
+	function findSuccessor(current_node){
+		if(current_node.getChild("R") != neel){
+			return findLeftMostNode(current_node.getChild("R"));
+		}
+
+		let current = current_node;
+		let ancestor = current_node.getParent();
+		while((ancestor != neel) && (ancestor.getChild("R") == current)){
+			current = ancestor;
+			ancestor = ancestor.getParent();
+		}
+
+		return ancestor;
+	}
+
+	function inOrderTraverse(current_node){
+		let index = 0;
+		let current = findLeftMostNode(current_node);
+
+		while(current != neel){
+			index++;
+			console.log(index + ". Key: " + current.getKey() + " Color: " + (current.getColor()?"Black":"Red"));
+			current = findSuccessor(current);
+		}
+	}
 
 	function rotateLeft(nodeX){
 		//1.
@@ -140,12 +202,96 @@ const RedBlackTree = function(){
 		nodeX.setChild("R", nodeY);
 	}
 
+	function fixInsertion(node){
+		let current = node;
+
+		while(current.getParent().getColor() == RED){
+			if(current.getParent() == current.getParent().getParent().getChild("L")){
+				let uncle = current.getParent().getParent().getChild("R");
+				if(uncle.getColor() == RED){ //Case1
+					current.getParent().setColor(BLACK);
+					uncle.setColor(BLACK);
+					current.getParent().getParent().setColor(RED);
+					current = current.getParent().getParent();
+				}
+				else{
+					if(current == current.getParent().getChild("R")){ //Case2
+						current = current.getParent();
+						rotateLeft(current);
+					}
+
+					//Case3
+					current.getParent().setColor(BLACK);
+					current.getParent().getParent().setColor(RED);
+					rotateRight(current.getParent().getParent());
+				}
+			}
+			else{
+				let uncle = current.getParent().getParent().getChild("L");
+				if(uncle.getColor() == RED){ //Case1
+					current.getParent().setColor(BLACK);
+					uncle.setColor(BLACK);
+					current.getParent().getParent().setColor(RED);
+					current = current.getParent().getParent();
+				}
+				else{
+					if(current == current.getParent().getChild("L")){ //Case2
+						current = current.getParent();
+						rotateRight(current);
+					}
+
+					//Case3
+					current.getParent().setColor(BLACK);
+					current.getParent().getParent().setColor(RED);
+					rotateLeft(current.getParent().getParent());
+				}
+			}
+		}
+		root.setColor(BLACK);
+	}
+
+	function insertNode(key, value){
+		let node_to_insert = TreeNode(key, value);
+		node_to_insert.setChild("L", neel);
+		node_to_insert.setChild("R", neel);
+		let current = root;
+		let parent_of_current = neel;
+
+		while(current != neel){
+			parent_of_current = current;
+			if(key < current.getKey()){
+				current = current.getChild("L");
+			}
+			else{
+				current = current.getChild("R");	
+			}
+		}
+
+		node_to_insert.setParent(parent_of_current);
+		if(parent_of_current == neel){
+			root = node_to_insert;
+		}
+		else if(key < parent_of_current.getKey()){
+			parent_of_current.setChild("L", node_to_insert);
+		}
+		else{
+			parent_of_current.setChild("R", node_to_insert);
+		}
+
+		fixInsertion(node_to_insert);
+	}
+
 	return {
-		rotateLeft: function(nodeX){
-			rotateLeft(nodeX);
+		levelOrderTraverse: function(){
+			console.log("Level-Order Travseral");
+			levelOrderTraverse();
 		},
-		rotateRight: function(nodeY){
-			rotateRight(nodeY);
+		sort: function(){
+			console.log("In-Order Traversal is Sort");
+			inOrderTraverse(root);
+		},
+		insertNode: function(key, value){
+			insertNode(key, value);
 		}
 	}
 }
