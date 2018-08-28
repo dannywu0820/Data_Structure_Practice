@@ -281,6 +281,87 @@ const RedBlackTree = function(){
 		fixInsertion(node_to_insert);
 	}
 
+	function searchNode(key){
+		let current = root;
+
+		while((current != neel) && (current.getKey() != key)){
+			if(key < current.getKey()){
+				current = current.getChild("L");
+			}
+			else{
+				current = current.getChild("R");
+			}
+		}
+
+		if(current == neel){
+			console.log("No Such Key");
+		}
+		else{
+			console.log("Found");
+		}
+		return current;
+	}
+
+	function fixDeletetion(node){
+
+	}
+
+	function deleteNode(key){
+		//1.make sure the node you want to delete exists
+		let node_to_delete = searchNode(key);
+		if(node_to_delete == neel){
+			console.log("No Such Node To Delete");
+			return;
+		}
+
+		//2.determine the node to release memory based on the number of children that the node you want to delete has
+		let node_to_release_memory = null;
+		if((node_to_delete.getChild("L") != neel) && (node_to_delete.getChild("R") != neel)){
+			node_to_release_memory = findSuccessor(node_to_delete);
+		}
+		else{
+			node_to_release_memory = node_to_delete;
+		}
+
+		//3.set parent of left/right child to the parent of itself
+		let child_of_release_memory = neel;
+		if(node_to_release_memory.getChild("L") != neel){
+			child_of_release_memory = node_to_release_memory.getChild("L");
+		}
+		else if(node_to_release_memory.getChild("R") != neel){
+			child_of_release_memory = node_to_release_memory.getChild("R");
+		}
+		else{
+			child_of_release_memory = neel;	
+		}
+
+		if(child_of_release_memory != neel){
+			child_of_release_memory.setParent(node_to_release_memory.getParent());
+		}
+		
+		//4.set child of its parent to the child of itself
+		let parent_of_release_memory = node_to_release_memory.getParent();
+		if(parent_of_release_memory == neel){
+			root = child_of_release_memory;
+		}
+		else if(node_to_release_memory == parent_of_release_memory.getChild("L")){
+			parent_of_release_memory.setChild("L", child_of_release_memory);
+		}
+		else{
+			parent_of_release_memory.setChild("R", child_of_release_memory);
+		}
+
+		//5.copy the data in the node to clean memory to the node you want to delete if they are different
+		if(node_to_release_memory != node_to_delete){
+			node_to_delete.setKey(node_to_release_memory.getKey());
+			node_to_delete.setValue(node_to_release_memory.getValue());
+		}
+
+		//6.fix
+		delete node_to_release_memory;
+		//fixDeletetion(node_to_release_memory)
+	}
+
 	return {
 		levelOrderTraverse: function(){
 			console.log("Level-Order Travseral");
@@ -292,6 +373,9 @@ const RedBlackTree = function(){
 		},
 		insertNode: function(key, value){
 			insertNode(key, value);
+		},
+		deleteNode: function(key){
+			deleteNode(key);
 		}
 	}
 }
