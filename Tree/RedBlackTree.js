@@ -303,7 +303,73 @@ const RedBlackTree = function(){
 	}
 
 	function fixDeletetion(node){
+		let current = node;
+		
+		while((current != root) && (current.getColor() == BLACK)){
+			if(current == current.getParent().getChild("L")){
+				let sibling = current.getParent().getChild("R");
 
+				if(sibling.getColor() == RED){ //Case1
+					sibling.setColor(BLACK);
+					current.getParent().setColor(RED);
+					rotateLeft(current.getParent());
+					sibling = current.getParent().getChild("R");
+				}
+
+				//enter into Case2,3,4 after fixing from Case1
+				if((sibling.getChild("L").getColor() == BLACK) && (sibling.getChild().getColor("R") == BLACK)){ //Case2
+					sibling.setColor(RED);
+					current = current.getParent();
+				}
+				else{
+					if(sibling.getChild("R").getColor() == BLACK){ //Case3
+						sibling.setColor(RED);
+						sibling.getChild("L").setColor(BLACK);
+						rotateRight(sibling);
+						sibling = current.getParent().getChild("R");
+					}
+
+					//Case4
+					sibling.setColor(current.getParent().getColor());
+					current.getParent().setColor(BLACK);
+					sibling.getChild("R").setColor(BLACK);
+					rotateLeft(current.getParent());
+					current = root;
+				}
+			}
+			else{
+				let sibling = current.getParent().getChild("L");
+
+				if(sibling.getColor() == RED){ //Case1
+					sibling.setColor(BLACK);
+					current.getParent().setColor(RED);
+					rotateRight(current.getParent());
+					sibling = current.getParent().getChild("L");
+				}
+
+				//enter into Case2,3,4 after fixing from Case1
+				if((sibling.getChild("L").getColor() == BLACK) && (sibling.getChild().getColor("R") == BLACK)){ //Case2
+					sibling.setColor(RED);
+					current = current.getParent();
+				}
+				else{
+					if(sibling.getChild("L").getColor() == BLACK){ //Case3
+						sibling.setColor(RED);
+						sibling.getChild("R").setColor(BLACK);
+						rotateLeft(sibling);
+						sibling = current.getParent().getChild("L");
+					}
+
+					//Case4
+					sibling.setColor(current.getParent().getColor());
+					current.getParent().setColor(BLACK);
+					sibling.getChild("L").setColor(BLACK);
+					rotateRight(current.getParent());
+					current = root;
+				}
+			}
+		}
+		current.setColor(BLACK);
 	}
 
 	function deleteNode(key){
@@ -323,7 +389,7 @@ const RedBlackTree = function(){
 			node_to_release_memory = node_to_delete;
 		}
 
-		//3.set parent of left/right child to the parent of itself
+		//3.set parent of left/right child to the parent of itself, even when the child is NIL
 		let child_of_release_memory = neel;
 		if(node_to_release_memory.getChild("L") != neel){
 			child_of_release_memory = node_to_release_memory.getChild("L");
@@ -335,9 +401,7 @@ const RedBlackTree = function(){
 			child_of_release_memory = neel;	
 		}
 
-		if(child_of_release_memory != neel){
-			child_of_release_memory.setParent(node_to_release_memory.getParent());
-		}
+		child_of_release_memory.setParent(node_to_release_memory.getParent());
 		
 		//4.set child of its parent to the child of itself
 		let parent_of_release_memory = node_to_release_memory.getParent();
@@ -358,8 +422,11 @@ const RedBlackTree = function(){
 		}
 
 		//6.fix
+		if(node_to_release_memory.getColor() == BLACK){
+			fixDeletetion(child_of_release_memory);
+		}
+
 		delete node_to_release_memory;
-		//fixDeletetion(node_to_release_memory)
 	}
 
 	return {
@@ -376,6 +443,9 @@ const RedBlackTree = function(){
 		},
 		deleteNode: function(key){
 			deleteNode(key);
+		},
+		searchNode: function(key){
+			return searchNode(key);
 		}
 	}
 }
