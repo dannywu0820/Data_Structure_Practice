@@ -331,8 +331,8 @@ const RedBlackTree = function(){
 
 					//Case4
 					sibling.setColor(current.getParent().getColor());
-					current.getParent().setColor(BLACK);
 					sibling.getChild("R").setColor(BLACK);
+					current.getParent().setColor(BLACK);
 					rotateLeft(current.getParent());
 					current = root;
 				}
@@ -362,8 +362,8 @@ const RedBlackTree = function(){
 
 					//Case4
 					sibling.setColor(current.getParent().getColor());
-					current.getParent().setColor(BLACK);
 					sibling.getChild("L").setColor(BLACK);
+					current.getParent().setColor(BLACK);
 					rotateRight(current.getParent());
 					current = root;
 				}
