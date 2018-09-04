@@ -54,29 +54,49 @@ BinaryHeap.prototype.swapNode = function(node1_index, node2_index){
 	this[node2_index] = temp;
 }
 
+BinaryHeap.prototype.printHeap = function(){
+	for(let i = 1; i < this.length; i++){
+		console.log(i + ".Key: " + this[i].getKey() + " Value: " + this[i].getValue());
+	}
+}
+
 const MinPriorityQueue = function(){
-	let binary_heap = new BinaryHeap();
-	for(let i = 1; i < 10; i++){
-		binary_heap[i] = HeapNode(i, String.fromCharCode(64+i));
+	let binary_heap = new BinaryHeap();	
+
+	function MinHeapify(node_index){
+		let left_child_index = node_index * 2;
+		let right_child_index = left_child_index + 1;
+		let smallest = node_index;
+
+		if((left_child_index <= (binary_heap.length - 1)) && (binary_heap[left_child_index].getKey() < binary_heap[smallest].getKey())){
+			smallest = left_child_index;
+		}
+
+		if((right_child_index <= (binary_heap.length - 1)) && (binary_heap[right_child_index].getKey() < binary_heap[smallest].getKey())){
+			smallest = right_child_index;
+		}
+
+		if(smallest != node_index){
+			binary_heap.swapNode(smallest, node_index);
+			MinHeapify(smallest);
+		}
 	}
 
-	console.log(binary_heap.getNodeIndex("B"));
-	console.log(binary_heap.getParentIndex(9));
+	function buildMinHeap(key_value_pairs){
 
-	binary_heap.swapNode(2, 3);
-	for(let i = 1; i < 10; i++){
-		console.log(i + ".Key: " + binary_heap[i].getKey() + " Value: " + binary_heap[i].getValue());
-	}	
+		for(let i = 0; i < key_value_pairs.length; i++){
+			let new_node = HeapNode(key_value_pairs[i][0], key_value_pairs[i][1]);
+			binary_heap[i+1] = new_node;
+		}
 
-	/*function MinHeapify(){
+		for(let node_index = Math.floor((binary_heap.length - 1)/2); node_index > 0; node_index--){
+			MinHeapify(node_index);
+		}
 
+		binary_heap.printHeap();
 	}
 
-	function buildMinHeap(){
-
-	}
-
-	function getMinimum(){
+	/*function getMinimum(){
 
 	}
 
@@ -91,8 +111,12 @@ const MinPriorityQueue = function(){
 	function insert(){
 
 	}*/
+
+	return {
+		buildMinHeap: function(key_value_pairs){
+			buildMinHeap(key_value_pairs);
+		}
+	}
 }
 
-MinPriorityQueue();
-
-//module.exports = MinPriorityQueue;
+module.exports = MinPriorityQueue;
