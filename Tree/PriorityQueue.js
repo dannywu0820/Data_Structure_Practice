@@ -147,9 +147,16 @@ const MinPriorityQueue = function(){
 		binary_heap.printHeap();
 	}
 
-	/*function insert(){
-
-	}*/
+	function insert(key, value){
+		let new_node = HeapNode(key, value);
+		if(binary_heap.isEmpty()){
+			binary_heap[1] = new_node;
+		}
+		else{
+			binary_heap.push(new_node);
+		}
+		decreaseKey(value, key);
+	}
 
 	return {
 		buildMinHeap: function(key_value_pairs){
@@ -160,6 +167,9 @@ const MinPriorityQueue = function(){
 		},
 		decreaseKey: function(node_value, new_key){
 			decreaseKey(node_value, new_key);
+		},
+		insert: function(key, value){
+			insert(key, value);
 		}
 	}
 }
