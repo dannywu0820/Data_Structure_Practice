@@ -6,6 +6,10 @@ const HeapNode = function(importance, job){
 		return key_int;
 	}
 
+	function setKey(new_key){
+		key_int = new_key;
+	}
+
 	function getValue(){
 		return value_str;
 	}
@@ -13,6 +17,9 @@ const HeapNode = function(importance, job){
 	return {
 		getKey: function(){
 			return getKey();
+		},
+		setKey: function(new_key){
+			setKey(new_key);
 		},
 		getValue: function(){
 			return getValue();
@@ -116,11 +123,31 @@ const MinPriorityQueue = function(){
 		return min;
 	}
 
-	/*function decreaseKey(){
+	function decreaseKey(node_value, new_key){
+		let node_index = binary_heap.getNodeIndex(node_value);
+		if(node_index == 0){
+			console.log("No Such Node!!!");
+			return;
+		}
+		
+		if(new_key > binary_heap[node_index].getKey()){
+			console.log("New Key Should Be Smaller!!!");
+			return;
+		}
+		
+		binary_heap[node_index].setKey(new_key);
 
+		let parent_index = binary_heap.getParentIndex(node_index);
+		while((node_index > 1) && (binary_heap[node_index].getKey() < binary_heap[parent_index].getKey())){
+			binary_heap.swapNode(node_index, parent_index);
+			node_index = parent_index;
+			parent_index = binary_heap.getParentIndex(node_index);
+		}
+
+		binary_heap.printHeap();
 	}
 
-	function insert(){
+	/*function insert(){
 
 	}*/
 
@@ -130,6 +157,9 @@ const MinPriorityQueue = function(){
 		},
 		popMinimum: function(){
 			return popMinimum();
+		},
+		decreaseKey: function(node_value, new_key){
+			decreaseKey(node_value, new_key);
 		}
 	}
 }

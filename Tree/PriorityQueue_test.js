@@ -43,9 +43,32 @@ function popMinimumTest(){
 	}
 }
 
+function decreaseKeyTest(){
+	let minPQ = PQ();
+	let key_value_pairs = [
+		[12, "C"],
+		[15, "H"],
+		[20, "E"],
+		[22, "B"],
+		[2, "D"],
+		[4, "F"],
+		[10, "I"],
+		[7, "A"],
+		[8, "G"]
+	]
+
+	minPQ.buildMinHeap(key_value_pairs);
+	minPQ.popMinimum();
+	console.log("-----[decreaseKeyTest]-----");
+	minPQ.decreaseKey("Z", 3);
+	minPQ.decreaseKey("H", 22);
+	minPQ.decreaseKey("H", 3);
+}
+
 function main(){
 	buildMinHeapTest();
 	popMinimumTest();
+	decreaseKeyTest();
 }
 
 main();
