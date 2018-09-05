@@ -96,15 +96,27 @@ const MinPriorityQueue = function(){
 		binary_heap.printHeap();
 	}
 
-	/*function getMinimum(){
-
+	function getMinimum(){
+		return binary_heap[1].getValue();
 	}
 
 	function popMinimum(){
+		if(binary_heap.isEmpty()){
+			console.log("Heap Is Empty!!!");
+			return null;
+		}
 
+		let min = getMinimum();
+		binary_heap.swapNode(1, (binary_heap.length - 1));
+		binary_heap.pop();
+		MinHeapify(1);
+
+		binary_heap.printHeap();
+
+		return min;
 	}
 
-	function decreaseKey(){
+	/*function decreaseKey(){
 
 	}
 
@@ -115,6 +127,9 @@ const MinPriorityQueue = function(){
 	return {
 		buildMinHeap: function(key_value_pairs){
 			buildMinHeap(key_value_pairs);
+		},
+		popMinimum: function(){
+			return popMinimum();
 		}
 	}
 }
